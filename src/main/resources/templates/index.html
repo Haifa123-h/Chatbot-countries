@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJSD Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            background-color: #f5f3f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #764ba2;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex: 1;
+            gap: 15px;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        /* Left Panel - Conversation */
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fafafa;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            min-width: 0;
+        }
+
+        .left-panel h2 {
+            font-size: 16px;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .conversation-container {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+            max-height: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .conversation-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .conversation-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .conversation-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .conversation-container::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        .message {
+            padding: 10px 12px;
+            border-radius: 6px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .chatbot-message {
+            background-color: #e8eaf6;
+            border-left: 4px solid #667eea;
+            align-self: flex-start;
+            max-width: 85%;
+        }
+
+        .chatbot-message strong {
+            color: #667eea;
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .user-message {
+            background-color: #f3e5f5;
+            border-left: 4px solid #764ba2;
+            align-self: flex-end;
+            max-width: 85%;
+        }
+
+        .user-message strong {
+            color: #764ba2;
+            display: block;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        /* Right Panel - About */
+        .right-panel {
+            width: 280px;
+            background-color: #f8f6fc;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+
+        .right-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .right-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .right-panel::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .right-panel h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .right-panel p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+
+        .about-section {
+            margin-bottom: 15px;
+        }
+
+        /* Bottom Panel - Input */
+        .bottom-panel {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background-color: #f9f7fc;
+            border-top: 1px solid #e0e0e0;
+            align-items: flex-end;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            min-height: 50px;
+            max-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        #userInput:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        #askButton {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            min-width: 120px;
+            height: 50px;
+        }
+
+        #askButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        #askButton:active {
+            transform: translateY(0);
+        }
+
+        #askButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-indicator {
+            display: none;
+            font-size: 12px;
+            color: #667eea;
+            margin-top: 4px;
+        }
+
+        .loading-indicator.active {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f5f3f8;
+            padding: 12px 15px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .right-panel {
+                width: 100%;
+                max-height: 200px;
+            }
+
+            .conversation-container {
+                max-height: 250px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>AJSD Chatbot</h1>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel - Conversation -->
+            <div class="left-panel">
+                <h2>Our conversation</h2>
+                <div class="conversation-container" id="conversationContainer">
+                    <!-- Initial messages or messages from context -->
+                    <div th:if="${conversationContext != null and conversationContext.messages != null}">
+                        <div th:each="message : ${conversationContext.messages}"
+                             th:class="'message ' + (${message.contains('Chatbot says')} ? 'chatbot-message' : 'user-message')">
+                            <span th:utext="${#strings.replace(message, '\n', '<br>')}"></span>
+                        </div>
+                    </div>
+                    <div th:if="${conversationContext == null or conversationContext.messages == null or conversationContext.messages.isEmpty()}">
+                        <div class="message chatbot-message">
+                            <strong>Chatbot says:</strong>
+                            Welcome to AJSD Chatbot! Type 'start' to begin learning about countries.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - About/Instructions -->
+            <div class="right-panel">
+                <h3>About AJSD Chatbot:</h3>
+                <div class="about-section">
+                    <p>This chatbot can help you learn about the capital of countries. Try it out.</p>
+                </div>
+
+                <h3>Instructions:</h3>
+                <div class="about-section">
+                    <p>1. type 'start' to begin
+2. type 'clear' to reset
+3. type another country name or put a space after the country name when a valid country name is not understood
+4. try using the rest or use the term 'start' to try from beginning</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Panel - Input -->
+        <div class="bottom-panel">
+            <div class="input-wrapper">
+                <textarea id="userInput" placeholder="Enter your text here for AJSD Chatbot to respond to......"
+                          rows="2"></textarea>
+                <div class="loading-indicator" id="loadingIndicator">Processing your request...</div>
+            </div>
+            <button id="askButton" onclick="sendMessage()">Ask Chatbot</button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>By using this chatbot you indemnify the creators from all Legal action.
+            Please remember that AJSD Chatbot can make mistakes.</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-scroll to bottom when new messages appear
+        function scrollToBottom() {
+            const container = document.getElementById('conversationContainer');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Send message to the server
+        function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+            const askButton = document.getElementById('askButton');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            if (!message) {
+                alert('Please enter a message before sending.');
+                return;
+            }
+
+            // Disable button and show loading
+            askButton.disabled = true;
+            loadingIndicator.classList.add('active');
+
+            appendMessage(message, false);
+
+            // Send POST request to /chat endpoint
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                userInput.value = '';
+                appendMessage(data.response, true);
+                setTimeout(scrollToBottom, 100);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while sending your message. Please try again.');
+            })
+            .finally(() => {
+                // Re-enable button and hide loading
+                askButton.disabled = false;
+                loadingIndicator.classList.remove('active');
+            });
+        }
+
+        function appendMessage(text, isBot) {
+            const container = document.getElementById('conversationContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + (isBot ? 'chatbot-message' : 'user-message');
+            const label = isBot ? '<strong>Chatbot says:</strong>' : '<strong>You said:</strong>';
+            messageDiv.innerHTML = label + text.replace(/\n/g, '<br>');
+            container.appendChild(messageDiv);
+        }
+
+        // Allow Enter key to send message (Shift+Enter for new line)
+        document.getElementById('userInput').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Scroll to bottom on page load
+        window.addEventListener('load', scrollToBottom);
+    </script>
+</body>
+</html>
+I have a chatbot interface layout, and I would like to create it as a
+Thymeleaf template for my Spring Boot application. The layout includes the following elements:
+
+Header:
+ A title at the top, "AJSD Chatbot."
+
+Left Panel:
+    A scrollable section labeled "Our conversation" that shows messages exchanged
+    between the chatbot and the user.
+    Each message should be styled distinctly (e.g., "Chatbot says" and "You requested").
+    Only this section should scroll, on overflow. Max height is 350px
+
+Right Panel:
+    A section titled "About AJSD Chatbot" with descriptive text about the chatbot,
+    including instructions for interacting with it like display :
+     "1. type 'teach' to begin
+     2. type 'clear' to reset
+     3.  type 'another country name or put a space after the country name' when
+         'a valid country name is not understood'.
+     4. try using the rest or use the term 'teach' to try from beginning
+    "
+
+Bottom Panel:
+    An input field where the user can type their query or response to the chatbot.
+    A button labeled "Ask Chatbot" to send the query.
+
+Footer:
+    A disclaimer text at the bottom stating: "By using this chatbot,
+    you indemnify the creators from all legal action. Please remember that AJSD Chatbot can make mistakes."
+
+The color scheme includes a light background with a slightly darker panel on the left and right
+for visual distinction.
+
+Please generate a Thymeleaf template here (index.html) for this layout,
+including the appropriate CSS for styling.
+
+Ensure the left panel is scrollable,
+and the input field and button are placed at the bottom.
+
+Here's what I need for functionality:
+
+Conversation Flow:
+    The user's input string should be sent to a REST API (/chat) when they click the "Ask Chatbot" button.
+    The server should process the input and update the ConversationContext object stored in the session.
+    The updated conversation context (including chatbot responses) should be dynamically
+    displayed in the "Our conversation" section without refreshing the page.
+    Replace "\n" with new lines.
+
+Requirements:
+    Use Thymeleaf for initial template rendering.
+    Use JavaScript (preferably fetch or Axios) for submitting user input asynchronously (AJAX).
+    Bind the updated conversation context returned by the REST API to the Thymeleaf template dynamically,
+    updating the conversation in real-time.
+
+Specific Features:
+    When a user enters text and clicks the "Ask Chatbot" button:
+    Send the input string to the /chat endpoint as a POST request.
+    The server should return the updated conversation (chatbot's response and user’s input).
+    Update the "Our conversation" panel in real-time.
+    Clear the input field after submission.
+
+Example Flow:
+    User enters "What is the capital of France?" and clicks "Ask Chatbot."
+    The input is sent to /chat.
+    The server responds with the chatbot's reply: "The capital of France is Paris."
+    The conversation panel is updated dynamically
+
+    Please provide the Thymeleaf template and JavaScript code needed for this integration
+    with the "/chat" endpoint.
+-->
+

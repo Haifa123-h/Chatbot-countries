@@ -1,0 +1,102 @@
+{
+  "USA": {
+    "capital": "Washington, D.C.",
+    "nationalAnimal": "Bald Eagle",
+    "nationalFlower": "Rose"
+  },
+  "Canada": {
+    "capital": "Ottawa",
+    "nationalAnimal": "Beaver",
+    "nationalFlower": "Maple Leaf"
+  },
+  "United Kingdom": {
+    "capital": "London",
+    "nationalAnimal": "Lion",
+    "nationalFlower": "Rose"
+  },
+  "France": {
+    "capital": "Paris",
+    "nationalAnimal": "Gallic Rooster",
+    "nationalFlower": "Iris"
+  },
+  "Germany": {
+    "capital": "Berlin",
+    "nationalAnimal": "Eagle",
+    "nationalFlower": "Cornflower"
+  },
+  "Japan": {
+    "capital": "Tokyo",
+    "nationalAnimal": "Green Pheasant",
+    "nationalFlower": "Cherry Blossom"
+  },
+  "China": {
+    "capital": "Beijing",
+    "nationalAnimal": "Giant Panda",
+    "nationalFlower": "Plum Blossom"
+  },
+  "India": {
+    "capital": "New Delhi",
+    "nationalAnimal": "Bengal Tiger",
+    "nationalFlower": "Lotus"
+  },
+  "Brazil": {
+    "capital": "Brasilia",
+    "nationalAnimal": "Jaguar",
+    "nationalFlower": "Cattleya Orchid"
+  },
+  "Australia": {
+    "capital": "Canberra",
+    "nationalAnimal": "Red Kangaroo",
+    "nationalFlower": "Golden Wattle"
+  },
+  "South Africa": {
+    "capital": "Pretoria",
+    "nationalAnimal": "Springbok",
+    "nationalFlower": "King Protea"
+  },
+  "Mexico": {
+    "capital": "Mexico City",
+    "nationalAnimal": "Golden Eagle",
+    "nationalFlower": "Dahlia"
+  },
+  "Argentina": {
+    "capital": "Buenos Aires",
+    "nationalAnimal": "Rufous Hornero",
+    "nationalFlower": "Ceibo"
+  },
+  "Russia": {
+    "capital": "Moscow",
+    "nationalAnimal": "Brown Bear",
+    "nationalFlower": "Chamomile"
+  },
+  "Italy": {
+    "capital": "Rome",
+    "nationalAnimal": "Italian Wolf",
+    "nationalFlower": "Lily"
+  },
+  "Spain": {
+    "capital": "Madrid",
+    "nationalAnimal": "Bull",
+    "nationalFlower": "Red Carnation"
+  },
+  "Netherlands": {
+    "capital": "Amsterdam",
+    "nationalAnimal": "Lion",
+    "nationalFlower": "Tulip"
+  },
+  "Sweden": {
+    "capital": "Stockholm",
+    "nationalAnimal": "Moose",
+    "nationalFlower": "Linnaea"
+  },
+  "Norway": {
+    "capital": "Oslo",
+    "nationalAnimal": "Lion",
+    "nationalFlower": "Purple Heather"
+  },
+  "Egypt": {
+    "capital": "Cairo",
+    "nationalAnimal": "Steppe Eagle",
+    "nationalFlower": "Lotus"
+  }
+}
